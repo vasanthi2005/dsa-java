@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FrequencyCounter",
+            "request": "launch",
+            "mainClass": "basics.FrequencyCounter",
+            "projectName": "dsa-java_d3de2e97"
+        },
+        {
+            "type": "java",
+            "name": "CollectionsPractice",
+            "request": "launch",
+            "mainClass": "basics.CollectionsPractice",
+            "projectName": "dsa-java_d3de2e97"
+        },
+        {
+            "type": "java",
             "name": "Pattern7",
             "request": "launch",
             "mainClass": "basics.Pattern7",
