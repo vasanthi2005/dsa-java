@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SortingPractice",
+            "request": "launch",
+            "mainClass": "basics.SortingPractice",
+            "projectName": "dsa-java_d3de2e97"
+        },
+        {
+            "type": "java",
             "name": "FrequencyCounter",
             "request": "launch",
             "mainClass": "basics.FrequencyCounter",
