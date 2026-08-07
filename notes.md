@@ -87,3 +87,5 @@ a function, not just data.
 
 Lambda `(a, b) -> ...` is shorthand for the older
 `new Comparator<String>() { public int compare(...) }` form — same thing.
+
+**Euclidean algorithm** — gcd(a,b) = gcd(b, a%b) until b is 0. O(log n). Brute force divisor-checking is O(min(a,b)) and times out around 10⁹.

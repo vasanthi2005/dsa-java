@@ -15,7 +15,7 @@ public class Armstrongnum {
     }
 
     // anynum of digits
-    static boolean armstrongNumber(int n) {
+    static boolean armstrongNumber1(int n) {
         int digits = 0;
         int t = n;
         while (t != 0) {
