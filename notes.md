@@ -89,3 +89,56 @@ Lambda `(a, b) -> ...` is shorthand for the older
 `new Comparator<String>() { public int compare(...) }` form — same thing.
 
 **Euclidean algorithm** — gcd(a,b) = gcd(b, a%b) until b is 0. O(log n). Brute force divisor-checking is O(min(a,b)) and times out around 10⁹.
+
+## Recursion
+
+**Definition** — a function that calls itself, breaking a problem into
+smaller subproblems until it hits a base case that stops the calls.
+
+**Two required parts**
+1. **Base case** — the condition that stops the recursion and returns
+   without calling again
+2. **Recursive case** — a call on a smaller input, moving toward the base
+
+Missing base case, or a call that doesn't shrink the input → infinite
+recursion → StackOverflowError.
+
+**The call stack** — every call is stored on a stack while it waits for
+the calls below it to finish. Nothing returns until the base case is
+reached; then values return back up one by one. That stack is why
+recursion costs O(n) space where a loop would cost O(1).
+
+**How to reason about it** — don't trace every level. Assume the
+recursive call returns the correct answer for the smaller input, then
+ask what you do with it. Trusting the smaller call is the whole skill.
+
+**When it's worth it**
+- Naturally recursive structures: trees, graphs, nested data
+- Divide and conquer: mergesort, quicksort, binary search
+- Foundation for backtracking and DP
+
+**Costs** — extra memory per call, slower than an equivalent loop,
+harder to debug. Anything recursive can be written iteratively.
+
+### Patterns from the problems
+
+**Print N times / print 1 to N** — base case at the boundary, recursive
+call with n-1. Order of the print statement relative to the call decides
+whether output runs forwards or backwards.
+
+**Sum of first N** — `sum(n) = n + sum(n-1)`, base case `sum(0) = 0`.
+The shape: combine the current value with the result of the smaller call.
+
+**Factorial** — same shape with multiplication. `fact(n) = n * fact(n-1)`,
+base `fact(0) = 1`.
+
+**Reverse an array** — two pointers moving inward, recursing until they
+meet. Same logic as the iterative two-pointer version; O(n) space here
+because of the stack.
+
+**Palindrome check** — compare outer characters, recurse inward. Base
+case when the pointers cross.
+
+**Fibonacci** — `fib(n) = fib(n-1) + fib(n-2)`, two base cases (0 and 1).
+Naive version is O(2^n) because it recomputes the same values repeatedly.
+This is the motivating example for memoisation and DP later.
