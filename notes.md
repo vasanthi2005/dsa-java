@@ -96,6 +96,7 @@ Lambda `(a, b) -> ...` is shorthand for the older
 smaller subproblems until it hits a base case that stops the calls.
 
 **Two required parts**
+
 1. **Base case** — the condition that stops the recursion and returns
    without calling again
 2. **Recursive case** — a call on a smaller input, moving toward the base
@@ -113,6 +114,7 @@ recursive call returns the correct answer for the smaller input, then
 ask what you do with it. Trusting the smaller call is the whole skill.
 
 **When it's worth it**
+
 - Naturally recursive structures: trees, graphs, nested data
 - Divide and conquer: mergesort, quicksort, binary search
 - Foundation for backtracking and DP
@@ -142,3 +144,56 @@ case when the pointers cross.
 **Fibonacci** — `fib(n) = fib(n-1) + fib(n-2)`, two base cases (0 and 1).
 Naive version is O(2^n) because it recomputes the same values repeatedly.
 This is the motivating example for memoisation and DP later.
+
+## Hashing
+
+**Precompute then lookup** — build a frequency structure in one pass,
+then answer each query in O(1). Without it, every query rescans the
+input: O(n×q) becomes O(n+q).
+
+**Array vs HashMap** — use an array when keys are a small known range
+(26 letters: `hash[c - 'a']`, since chars are numbers underneath).
+Use a HashMap for arbitrary keys — any integer, large or negative.
+
+**`while (q-- > 0)`** — post-decrement returns the current value then
+subtracts 1, so the check uses the old value. Same as
+`for (int i = 0; i < q; i++)`, just shorter.
+
+**Iterating a map**
+
+    for (Map.Entry<Integer,Integer> e : map.entrySet()) {
+        e.getKey();    // the key of THIS entry
+        e.getValue();  // its value
+    }
+
+`map` is the container, `e` is one item from it. `map.getKey()` doesn't
+exist — the map has many keys, the entry has one.
+
+**Building a list of lists** — create the inner list INSIDE the loop.
+Declaring it outside means every pair points at the same list, and you
+end up with all values in one. (Opposite of the while-loop scope bug,
+where the variable had to be outside.)
+
+**Tracking a max needs two variables** — the best count AND the element
+that achieved it. Returning the count when the question asks for the
+element is easy to miss, because they sometimes coincide by chance.
+
+**Tie-breaks matter with HashMap** — iteration order is arbitrary, so
+"first one wins" is unpredictable. Handle ties explicitly.
+
+**The three O(n²) sorts**
+
+|           | Best  | Worst | Stable | Notes                                         |
+| --------- | ----- | ----- | ------ | --------------------------------------------- |
+| Selection | O(n²) | O(n²) | No     | Fewest swaps (n-1)                            |
+| Bubble    | O(n)  | O(n²) | Yes    | O(n) only with the swapped flag               |
+| Insertion | O(n)  | O(n²) | Yes    | Best on nearly-sorted; used inside real sorts |
+
+All O(1) space, all in-place. None used in practice except insertion,
+which library sorts fall back to for small subarrays.
+
+**What made mine wrong twice** — I wrote the same forward-scan-and-swap
+loop for all three. Each algorithm has a distinct movement pattern:
+selection finds the min then swaps once; bubble compares adjacent pairs;
+insertion shifts backward with early exit. Sorting correctly isn't the
+same as implementing the named algorithm.
