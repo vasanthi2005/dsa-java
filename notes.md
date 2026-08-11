@@ -1,3 +1,9 @@
+## REDO LIST
+
+Hash two problems
+
+---
+
 ## Time & Space Complexity
 
 **Definition** — rate at which runtime grows with input size.
@@ -197,3 +203,9 @@ loop for all three. Each algorithm has a distinct movement pattern:
 selection finds the min then swaps once; bubble compares adjacent pairs;
 insertion shifts backward with early exit. Sorting correctly isn't the
 same as implementing the named algorithm.
+**Merge sort** — recursion divides, merge conquers. The recursive calls sort nothing; every merge is where sorting happens. Guaranteed O(n log n) unlike quicksort. Needs O(n) extra space.
+Count vs index — arr.length is a count, the last index is length - 1. Ask which one a bound needs, every time.
+
+Three-line swap: the last line is always temp. Wrote arr[x] = arr[y] there three separate times — insertion sort, partition, and the final pivot swap. By line 3 the first array slot has already been overwritten.
+
+Merge sort vs quicksort — merge splits blindly and does the work when combining; quicksort does the work when splitting and nothing on the way back. Merge is O(n log n) guaranteed but needs O(n) space; quicksort is in-place but O(n²) in the worst case.
