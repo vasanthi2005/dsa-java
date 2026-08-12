@@ -1,9 +1,9 @@
 ## REDO LIST
 
-.Hash two problems
-.sorting problems
 .Second largest (12 Aug)
 .Remove duplicates (12 Aug)
+.Merge sort
+.Quick sort
 
 ---
 

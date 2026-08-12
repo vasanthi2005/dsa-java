@@ -31,4 +31,29 @@ public class Mostfreqelement {
         }
         return result;
     }
+    public int mostFrequentElement(int[] nums)
+    {
+        HashMap<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<nums.length;i++)
+        {
+            map.put(nums[i],map.getOrDefault(nums[i],0)+1);
+        }
+        int maxCount=0;
+        int maxKey=0;
+        for(Map.EntrySet<Integer,Integer> e:map.entrySet())
+        {
+            int key=e.getKey();
+            int val=e.getValue();
+            if(val>maxCount)
+            {
+                maxCount=val;
+                maxKey=key;
+            }
+            else if(val==maxCount && key<maxKey)
+            {
+                maxKey=key;
+            }
+        }
+        return maxKey;
+    }
 }

@@ -13,7 +13,7 @@ class Frequencycount {
         {
             map.put(nums[i],map.getOrDefault(nums[i],0)+1);
         }
-        List<List<Integer>> result = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>(); 
         for(Map.Entry<Integer,Integer> e : map.entrySet())
         {
             List <Integer> pair= new ArrayList<>();
