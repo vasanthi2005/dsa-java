@@ -1,6 +1,9 @@
 ## REDO LIST
 
-Hash two problems
+.Hash two problems
+.sorting problems
+.Second largest (12 Aug)
+.Remove duplicates (12 Aug)
 
 ---
 
@@ -209,3 +212,49 @@ Count vs index — arr.length is a count, the last index is length - 1. Ask whic
 Three-line swap: the last line is always temp. Wrote arr[x] = arr[y] there three separate times — insertion sort, partition, and the final pivot swap. By line 3 the first array slot has already been overwritten.
 
 Merge sort vs quicksort — merge splits blindly and does the work when combining; quicksort does the work when splitting and nothing on the way back. Merge is O(n log n) guaranteed but needs O(n) space; quicksort is in-place but O(n²) in the worst case.
+
+## Arrays — patterns
+
+**Two pointers, read/write** — one pointer scans forward through everything,
+a second lags behind marking where to write. The gap between them is what
+you're discarding. Used for in-place modification: remove duplicates, move
+zeros. Safe because the writer never overtakes the reader.
+
+**Two pointers, opposite ends** — a different arrangement of the same family:
+pointers start at both ends and move inward. Used for reversal and quicksort's
+partition.
+
+**Track-two-variables pass** — second largest keeps max1 and max2 in one pass.
+When a new max is found, the old max1 shifts down to max2. Beats sorting
+(O(n) vs O(n log n)). Same shape as tracking maxCount + maxKey in the
+hashing problem.
+
+**Adjacent comparison only works on sorted input** — remove duplicates
+compares nums[i] with nums[i-1] and that's enough, because sorting puts
+duplicates next to each other. Unsorted would need a HashSet and O(n) space.
+
+## Gotchas
+
+**Sentinel values leak.** Initialising with Integer.MIN_VALUE works as an
+internal marker, but if nothing ever displaces it, it escapes into the return
+value. Always check for the sentinel before returning.
+
+**Index vs count.** A pointer marking the last filled position (from 0) means
+the count is pointer + 1. Same distinction as arr.length vs the last index.
+
+**Length syntax differs by type:**
+
+- `array.length` (field, no parens)
+- `string.length()` (method)
+- `list.size()` (method, different name)
+
+**Shift direction decides loop direction.** Shifting left, loop forward.
+Shifting right, loop backward — otherwise you overwrite each element before
+reading it.
+
+**Read the problem statement for left vs right.** GFG's rotate-by-one wanted
+right rotation; I wrote left. Identical logic, mirrored, and the descriptions
+look nearly the same.
+
+**Read the constraints before adding guards.** They tell you whether empty
+arrays are possible and whether an O(n²) approach will time out.
