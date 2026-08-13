@@ -258,3 +258,67 @@ look nearly the same.
 
 **Read the constraints before adding guards.** They tell you whether empty
 arrays are possible and whether an O(n²) approach will time out.
+
+## Arrays (cont.)
+
+**Rotate by k — reversal trick.** Reverse the first k, reverse the rest,
+then reverse the whole array. Reversing a section flips both position and
+internal order; reversing each block first means the final full reversal
+un-reverses each block while swapping their positions.
+
+    [1,2,3,4,5] k=2
+    reverse 0..1  → [2,1,3,4,5]
+    reverse 2..4  → [2,1,5,4,3]
+    reverse 0..4  → [3,4,5,1,2]
+
+O(n), each element touched exactly 3 times regardless of k. Brute force
+(rotate by one, k times) is O(n×k) and times out on large k.
+
+**`k = k % n` first** on any rotation problem. Rotating by more than the
+length wraps around — skipping it wastes work and can go out of bounds.
+Right rotation splits at n-k instead of k.
+
+**Move zeros — reframe the problem.** Don't move the zeros; they're
+interchangeable, so there's nothing to relocate. Collect the NON-zeros at
+the front, then pad the rest with zeros. Same read/write pointer shape as
+remove-duplicates.
+
+**Sortedness is what makes O(1) duplicate checks possible.** Remove
+duplicates compares against nums[i-1]; union compares against the last
+value added. Both work because sorted input puts duplicates adjacent.
+Unsorted would need a HashSet and O(n) space.
+
+**`list.contains()` inside a loop is O(n²).** Scans the whole list every
+call. A set's add() is O(1) for HashSet, O(log n) for TreeSet (which also
+keeps things sorted). Two pointers on sorted input beats both at O(n+m).
+
+**Linear search is optimal on unsorted data.** No way to skip elements
+without ordering. The moment data is sorted, binary search gives O(log n)
+— which is why it gets its own section.
+
+## Recurring mistakes
+
+**Index vs value — the most frequent one so far.** When a variable holds
+a position, you almost always want `arr[variable]`, not `variable`.
+Hit it in quicksort (`int start = pivot + 1`), remove duplicates
+(`int start = nums[0]`), and merge sort (comparing and adding indices
+instead of elements).
+
+**One counter, not two.** In move-zeros I incremented both i and start in
+the padding loop. They moved in lockstep so it worked — but redundant
+counters become bugs the moment something shifts.
+
+**Increments go outside the inner condition.** Advancing a pointer means
+"processed this element"; adding means "worth keeping". Two separate
+decisions. Put the increment inside the add-check and a skipped element
+never advances — infinite loop.
+
+**Guard clauses come first in `&&` / `||`.** Short-circuit evaluation runs
+left to right, so `list.isEmpty() || list.get(size-1) != x` is safe and the
+reverse crashes. Same as `start <= high && arr[start] <= pivot`.
+
+## Reuse
+
+The array-reversal solution became the helper inside rotate-by-k. The merge
+function's structure became the two-pointer union. Earlier problems turn into
+building blocks — that happens more from here on.

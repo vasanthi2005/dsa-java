@@ -1,0 +1,91 @@
+// Union of two sorted arrays (distinct values, sorted output)
+// Approach: TreeSet — add every element from both arrays, then copy out.
+//           The set handles duplicates and ordering automatically.
+// Time: O((n+m) log(n+m)), Space: O(n+m)
+// Note: first attempt used list.contains() inside the loop — that's an O(n)
+//       scan per element, making the whole thing O(n²). A set's add() is
+//       O(log n) for TreeSet, O(1) for HashSet (but unordered).
+// Better solution exists: two pointers walking both sorted arrays together
+//       (same logic as merge sort's merge, plus a duplicate guard comparing
+//       against the last added value). O(n+m) time — the sortedness of the
+//       inputs is what makes it possible. TODO: implement in revision.
+package arrays;
+public class UnionofsortedArrays
+{
+    public int[] unionArray(int[] nums1, int[] nums2)
+    {
+        TreeSet<Integer> set=new TreeSet<>();
+        for(int i=0;i<nums1.length;i++)
+        {
+            set.add(nums1[i]);
+        }
+        for (int i = 0; i < nums2.length; i++) 
+        {
+            set.add(nums2[i]);
+        }
+        int result[]=new int[set.size()];
+        int k=0;
+        for(int i:set)
+        {
+            result[k]=i;
+            k++;
+        }
+        return result;
+    }
+    //optimal approach
+    // Union of two sorted arrays — two pointer version
+// Approach: same structure as merge sort's merge — two pointers walking both
+//           arrays, take the smaller and advance that one — plus a duplicate
+//           guard before each add: skip if the value equals the last one added.
+// Time: O(n+m), Space: O(n+m) for the output
+// Note: comparing against only the LAST added value is enough because both
+//       inputs are sorted, so any duplicate must be the very next thing added.
+//       Sortedness turns "have I seen this?" from an O(n) search into O(1).
+//       list.isEmpty() must come first in the guard — || short-circuits, so
+//       the get() is skipped when there's nothing to compare against.
+//       Pointer increments sit OUTSIDE the duplicate check: advancing means
+//       "processed this element", adding means "worth keeping" — two separate
+//       decisions. Inside, a duplicate would never advance and loop forever.
+// Beats the TreeSet version: O(n+m) vs O((n+m) log(n+m)).
+    public int[] unionArray(int[] nums1, int[] nums2)
+    {
+        ArrayList<Integer> list=new ArrayList<>();
+        int i=0,j=0;
+        while(i<nums1.length && j<nums2.length)
+        {
+            if(list.isEmpty()||list.get(list.size()-1)!=nums1[i])
+            {
+                list.add(nums1[i]);
+            }
+            i++;
+            else
+            {
+                if(list.isEmpty()||list.get(list.size()-1)!=nums2[i])
+                {
+                    list.add(nums2[i]);
+                }
+                j++;
+            }
+
+        }
+          while (i < nums1.length) {
+        if (list.isEmpty() || list.get(list.size() - 1) != nums1[i]) {
+            list.add(nums1[i]);
+        }
+        i++;
+    }
+    
+    while (j < nums2.length) {
+        if (list.isEmpty() || list.get(list.size() - 1) != nums2[j]) {
+            list.add(nums2[j]);
+        }
+        j++;
+    }
+    int[] result = new int[list.size()];
+    for (int i = 0; i < list.size(); i++)
+    {
+        result[i] = list.get(i);
+    }
+    return result;
+    }
+}
