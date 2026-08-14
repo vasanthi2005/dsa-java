@@ -1,9 +1,8 @@
 ## REDO LIST
 
-.Second largest (12 Aug)
-.Remove duplicates (12 Aug)
-.Merge sort
+.Union of two sorted arrays — two pointer version (Aug 13)
 .Quick sort
+.Longest subarray with sum k
 
 ---
 
