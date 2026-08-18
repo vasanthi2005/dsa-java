@@ -1,10 +1,10 @@
 ## REDO LIST
 
-.Union of two sorted arrays — two pointer version (Aug 13)
 .Quick sort
 .Longest subarray with sum k
+.Union of two sorted arrays — two pointer version (Aug 13)
 
----
+------------------------------------------------------
 
 ## Time & Space Complexity
 

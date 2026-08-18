@@ -47,45 +47,42 @@ public class UnionofsortedArrays
 //       "processed this element", adding means "worth keeping" — two separate
 //       decisions. Inside, a duplicate would never advance and loop forever.
 // Beats the TreeSet version: O(n+m) vs O((n+m) log(n+m)).
-    public int[] unionArray(int[] nums1, int[] nums2)
-    {
-        ArrayList<Integer> list=new ArrayList<>();
-        int i=0,j=0;
-        while(i<nums1.length && j<nums2.length)
-        {
-            if(list.isEmpty()||list.get(list.size()-1)!=nums1[i])
-            {
+    public int[] unionArray(int[] nums1, int[] nums2) {
+    ArrayList<Integer> list = new ArrayList<>();
+    int i = 0, j = 0;
+
+    while (i < nums1.length && j < nums2.length) {
+        if (nums1[i] <= nums2[j]) {
+            if (list.isEmpty() || list.get(list.size() - 1) != nums1[i]) {
                 list.add(nums1[i]);
             }
             i++;
-            else
-            {
-                if(list.isEmpty()||list.get(list.size()-1)!=nums2[i])
-                {
-                    list.add(nums2[i]);
-                }
-                j++;
+        } else {
+            if (list.isEmpty() || list.get(list.size() - 1) != nums2[j]) {
+                list.add(nums2[j]);
             }
-
+            j++;
         }
-          while (i < nums1.length) {
+    }
+
+    while (i < nums1.length) {
         if (list.isEmpty() || list.get(list.size() - 1) != nums1[i]) {
             list.add(nums1[i]);
         }
         i++;
     }
-    
+
     while (j < nums2.length) {
         if (list.isEmpty() || list.get(list.size() - 1) != nums2[j]) {
             list.add(nums2[j]);
         }
         j++;
     }
+
     int[] result = new int[list.size()];
-    for (int i = 0; i < list.size(); i++)
-    {
-        result[i] = list.get(i);
+    for (int k = 0; k < list.size(); k++) {
+        result[k] = list.get(k);
     }
     return result;
-    }
+}
 }
