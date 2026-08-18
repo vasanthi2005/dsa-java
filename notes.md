@@ -1,10 +1,12 @@
 ## REDO LIST
 
-.Quick sort
 .Longest subarray with sum k
 .Union of two sorted arrays — two pointer version (Aug 13)
+.Dutch National Flag
+.Moore's Voting
+.Quick sort
 
-------------------------------------------------------
+---
 
 ## Time & Space Complexity
 
