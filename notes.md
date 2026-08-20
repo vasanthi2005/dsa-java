@@ -1,10 +1,11 @@
 ## REDO LIST
 
-.Longest subarray with sum k
-.Union of two sorted arrays — two pointer version (Aug 13)
-.Dutch National Flag
-.Moore's Voting
 .Quick sort
+.Longest subarray with sum k(negatives)
+.kadane's
+.buy n sell
+.Dutch National Flag
+. Next permutation — 21 Aug
 
 ---
 
@@ -323,3 +324,5 @@ reverse crashes. Same as `start <= high && arr[start] <= pivot`.
 The array-reversal solution became the helper inside rotate-by-k. The merge
 function's structure became the two-pointer union. Earlier problems turn into
 building blocks — that happens more from here on.
+
+->One variable, one meaning. Stock buy-sell needed a price and a profit. The Kadane's extension needed a tentative start and a confirmed start. Majority element needed a count and the element. When a maximum depends on something else, you need a variable for each — trying to store both in one is where the bug lives.
