@@ -1,12 +1,6 @@
 ## REDO LIST
 
-.Next permutation — 21 Aug
-.Quicksort partition — 19 Aug
-.kadane's-21 aug
-.Longest consecutive sequence-22 aug
-.Set matrix zeroes-22 aug
-. Spiral matrix — 22 Aug
-. Subarray sum equals k — 22 Aug
+- Pascal's Triangle I (single element, nCr) — 25 Aug
 
 ---
 
