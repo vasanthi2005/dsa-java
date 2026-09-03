@@ -1,8 +1,6 @@
 ## REDO LIST
 
-- Pascal's Triangle I (single element, nCr) — 25 Aug
-
----
+## -XOR problem-3 sept
 
 ## Time & Space Complexity
 
