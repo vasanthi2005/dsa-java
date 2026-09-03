@@ -1,6 +1,7 @@
 ## REDO LIST
 
-## -XOR problem-3 sept
+-XOR problem-3 sept
+-Merge Overlapping Subintervals-3 sept
 
 ## Time & Space Complexity
 
