@@ -1,7 +1,9 @@
 ## REDO LIST
 
--XOR problem-3 sept
--Merge Overlapping Subintervals-3 sept
+-merge sorted arrays-4 sept
+-repeated and missing number-4 sept
+-count inversions-7 sept
+-reverse pairs-7 sept
 
 ## Time & Space Complexity
 
@@ -320,3 +322,143 @@ function's structure became the two-pointer union. Earlier problems turn into
 building blocks — that happens more from here on.
 
 ->One variable, one meaning. Stock buy-sell needed a price and a profit. The Kadane's extension needed a tentative start and a confirmed start. Majority element needed a count and the element. When a maximum depends on something else, you need a variable for each — trying to store both in one is where the bug lives.
+
+# Merge Sort as a Counting Tool
+
+Two problems, same technique, one important difference.
+
+## The shared idea
+
+Both count pairs (i, j) where i < j and some condition holds between
+nums[i] and nums[j]. Brute force is O(n²). Merge sort gets it to
+O(n log n) because sortedness lets you count whole blocks at once
+instead of checking pairs one by one.
+
+Merge sort specifically, because it hands you two SORTED HALVES side
+by side at every level. And every pair falls into exactly one merge
+where i is in the left half and j is in the right — so nothing is
+double counted or missed.
+
+Quicksort wouldn't work: it partitions around a pivot and never
+produces two sorted halves.
+
+The halves aren't given by the problem. Merge sort manufactures them
+on the way back up.
+
+---
+
+## Count Inversions
+
+**Condition:** nums[i] > nums[j]
+
+**Counting happens INSIDE the merge loop:**
+
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            list.add(arr[left]); left++;
+        } else {
+            count += mid - left + 1;      // <-- here
+            list.add(arr[right]); right++;
+        }
+    }
+
+**Why it fits there:** the merge already compares arr[left] against
+arr[right], and that comparison IS the inversion condition. When the
+else branch fires you've just found arr[left] > arr[right] — and since
+the left half is sorted, everything from left to mid is bigger too.
+All of them are inversions with this right element.
+
+**Fixed on a RIGHT element, counting LEFT elements remaining.**
+
+Formula: `mid - left + 1` — positions left through mid, both endpoints
+included, hence the +1.
+
+---
+
+## Reverse Pairs
+
+**Condition:** nums[i] > 2 \* nums[j]
+
+**Counting happens in a SEPARATE pass, BEFORE the merge:**
+
+    int r = mid + 1;
+    for (int i = low; i <= mid; i++) {
+        while (r <= high && arr[i] > 2L * arr[r]) r++;
+        count += r - (mid + 1);
+    }
+
+    // then the merge, with NO counting in it
+
+**Why a separate pass:** the merge compares arr[left] vs arr[right],
+but the condition here is arr[left] > 2\*arr[right]. Different test, so
+counting can't ride along with the merge.
+
+**Why BEFORE:** the merge overwrites arr[low..high] with the combined
+result, destroying the two separate halves the counting depends on.
+
+**Fixed on a LEFT element, counting RIGHT elements passed.**
+
+Formula: `r - (mid + 1)` — no +1, because r stops one PAST the last
+match (the while exits when the condition fails).
+
+---
+
+## The two mistakes I made
+
+**Used the wrong formula.** Reached for `mid - i + 1` in reverse pairs,
+which is the inversions formula. Check which half you're counting:
+
+    left half  = low .. mid
+    right half = mid+1 .. high
+
+    Fixed on a LEFT element  → count right elements passed  → r - (mid+1)
+    Fixed on a RIGHT element → count left elements remaining → mid - left + 1
+
+The tell is the loop variable's range. `for (i = low; i <= mid)` walks
+the left half. A count involving mid+1 measures the right half.
+
+**Shared the pointer.** Used one `right` for both the counting pass and
+the merge. The counting pass leaves it partway through the right half,
+so the merge starts from the wrong place. The counting pass needs its
+own variable.
+
+---
+
+## +1 or not
+
++1 when both endpoints are included in the range.
+No +1 when the upper bound is exclusive — i.e. the pointer stopped one
+past the last item you want to count.
+
+Inversions counts an inclusive range (left..mid). Reverse pairs counts
+distance travelled, where the endpoint is one past.
+
+Check this every time rather than pattern-matching.
+
+---
+
+## Shared mechanics
+
+**Why `r` isn't reset per iteration of i (reverse pairs):** the left
+half is sorted too, so a larger arr[i] pairs with at least as many
+right elements as the one before it. r only moves forward — that's
+what keeps the pass O(n) rather than O(n²).
+
+**count must be a class field**, not a local — the counting happens
+inside merge(), several recursion levels below the entry point.
+
+**Reset count = 0** at the top of the entry method. Static fields
+persist between calls and the judge runs many test cases in one
+session; without the reset, test 2 inherits test 1's total.
+
+**Use long.** With n = 10^5 the inversion count can reach ~5×10^9,
+past int range.
+
+**2L not 2** in reverse pairs — `2 * arr[right]` overflows int for
+large values and wraps negative, producing false matches. (Fifth time
+this overflow rule has bitten me: nCr, 4-Sum, missing-and-repeating,
+and here.)
+
+THE RULE: the variable's type doesn't change how the expression is
+evaluated. Java computes the right-hand side in int arithmetic and
+widens afterwards. Cast an OPERAND, not the result.
