@@ -1,9 +1,6 @@
 ## REDO LIST
 
--merge sorted arrays-4 sept
--repeated and missing number-4 sept
--count inversions-7 sept
--reverse pairs-7 sept
+-Max product subarray-8 sept
 
 ## Time & Space Complexity
 
