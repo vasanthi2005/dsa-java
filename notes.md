@@ -1,6 +1,6 @@
 ## REDO LIST
 
--Max product subarray-8 sept
+-first and last occurence-11 sept
 
 ## Time & Space Complexity
 
