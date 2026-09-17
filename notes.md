@@ -1,6 +1,6 @@
 ## REDO LIST
 
--first and last occurence-11 sept
+-Search in rotated sorted array-15 sept
 
 ## Time & Space Complexity
 
