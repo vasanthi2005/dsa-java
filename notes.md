@@ -1,6 +1,9 @@
 ## REDO LIST
 
--Search in rotated sorted array-15 sept
+-Min in the rotated sorted array-17 sept
+-Single element in sorted array-17 sept
+-Search in rotated sorted array-17 sept
+-NTh root of a number-18th sept
 
 ## Time & Space Complexity
 
