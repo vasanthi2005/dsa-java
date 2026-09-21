@@ -1,9 +1,7 @@
 ## REDO LIST
 
--Min in the rotated sorted array-17 sept
--Single element in sorted array-17 sept
--Search in rotated sorted array-17 sept
--NTh root of a number-18th sept
+-NTh root of a number-21st sept
+-Find the smallest divisor-21st sept
 
 ## Time & Space Complexity
 
@@ -462,3 +460,59 @@ and here.)
 THE RULE: the variable's type doesn't change how the expression is
 evaluated. Java computes the right-hand side in int arithmetic and
 widens afterwards. Cast an OPERAND, not the result.
+
+---
+
+## How to recognise a binary search problem
+
+The sheet groups problems by topic, so the technique is always obvious.
+In an interview nobody labels them. Recognising WHEN to use a technique
+is a separate skill from executing it.
+
+### Signals
+
+**"Sorted"** — a sorted array plus "find something." Search, lower
+bound, first/last occurrence.
+
+**"Find the minimum X such that..." / "the maximum X such that..."**
+The biggest tell for answer-space problems.
+
+- Koko: MINIMUM speed such that she finishes in h hours
+- Smallest divisor: SMALLEST divisor such that the sum fits the threshold
+
+**An O(log n) requirement** — find-peak-element stated it outright. If
+log time is demanded, it's almost always binary search.
+
+**A huge answer range with a cheap check** — the answer could be up to
+10^9, so trying every value is hopeless, but checking ONE candidate is
+just a loop. That combination is exactly what binary search is for.
+
+### The real test underneath
+
+1. If I pick a value, can I easily check whether it works?
+2. If it works, does everything on ONE SIDE of it also work?
+
+Both yes → binary search applies.
+
+The second is the crucial one. Koko finishes at speed 5 if she did at
+speed 4 — faster never hurts. That one-directional property (monotonic)
+is what lets you throw away half the range each step.
+
+### When it does NOT apply
+
+When working values are scattered rather than grouped together.
+"Find a subarray summing to k" has no such property — a longer subarray
+isn't more or less likely to work. That's why it needed prefix sums.
+
+### Binary search does NOT require sorted data
+
+It requires a condition that eliminates half the range with certainty.
+
+- Find peak element: unsorted, but "uphill means a peak is that way"
+- Answer-space problems: no array being searched at all — just a range
+  of possible answers and a feasibility test
+
+### Practice note
+
+After finishing this section, try problems from a mixed list where the
+topic isn't labelled.
