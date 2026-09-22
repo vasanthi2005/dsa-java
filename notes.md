@@ -1,7 +1,6 @@
 ## REDO LIST
 
--NTh root of a number-21st sept
--Find the smallest divisor-21st sept
+-M bouquet - 22nd sept
 
 ## Time & Space Complexity
 
