@@ -1,6 +1,9 @@
 ## REDO LIST
 
 -M bouquet - 22nd sept
+-Ship capacity-23rd sept
+-Kth Missing Number-23rd Sept
+-Split Array Largest Sum -24th sept (Painter's Partition)
 
 ## Time & Space Complexity
 
@@ -515,3 +518,165 @@ It requires a condition that eliminates half the range with certainty.
 
 After finishing this section, try problems from a mixed list where the
 topic isn't labelled.
+
+---
+
+# Binary Search on the Answer Space — the four problems
+
+## The shape they share
+
+You're given a LIMIT. You search for something else.
+
+| Problem          | Given (the limit)     | Searching for    |
+| ---------------- | --------------------- | ---------------- |
+| Smallest divisor | threshold             | the divisor      |
+| Koko bananas     | h hours               | the eating speed |
+| Bouquets         | m bouquets, k flowers | the day          |
+| Ship packages    | days                  | the capacity     |
+
+**You can't compute the answer directly.** There's no formula that turns
+"3 days" into a capacity. But you CAN take a guessed capacity and count
+the days. So you guess and check — and binary search makes the guessing
+fast.
+
+### The shop picture
+
+You're buying a ship. You can't say "give me the ship for 3 days" —
+nobody can answer that. You point at a ship size and the shopkeeper tells
+you how many days. Then YOU decide if it's good enough.
+
+    mid     = the thing you point at (a guess at the answer)
+    helper  = the shopkeeper (guess → some number)
+    compare = your job (is that number within the limit?)
+    ans     = best guess so far
+
+Works for all four:
+
+    point at a capacity → shopkeeper says days
+    point at a speed    → says hours
+    point at a divisor  → says the sum
+    point at a day      → says bouquets
+
+---
+
+## Finding the range
+
+Two questions, every time. Don't memorise the answers — derive them.
+
+**What's the smallest value that isn't IMPOSSIBLE?**
+**What's the largest value that could still HELP?**
+
+| Problem  | low              | why                                                 | high          | why                                              |
+| -------- | ---------------- | --------------------------------------------------- | ------------- | ------------------------------------------------ |
+| Divisor  | 1                | smallest meaningful divisor                         | max(nums)     | every element rounds to 1, smallest possible sum |
+| Koko     | 1                | one banana an hour                                  | max(piles)    | each pile takes 1 hour, fastest possible         |
+| Bouquets | min(bloomDay)    | before that, nothing has bloomed at all             | max(bloomDay) | everything bloomed, waiting changes nothing      |
+| Ships    | **max(weights)** | a smaller ship can NEVER carry the heaviest package | sum(weights)  | everything in one trip                           |
+
+**Ships is the odd one.** Its low is a MAX, because anything below it is
+impossible rather than just slow. Koko's low is 1 because a speed below
+the smallest pile is still valid — just slower.
+
+The lower bound always comes from what the value MEANS.
+
+---
+
+## The helpers — all one pass with a resetting total
+
+    // divisor: sum of ceilings
+    for (int i : nums) sum += (int) Math.ceil((double) i / divisor);
+
+    // Koko: sum of ceilings (SAME as divisor — different story, same code)
+    for (int p : piles) hours += (int) Math.ceil((double) p / speed);
+
+    // bouquets: count runs of k
+    if (d <= day) { run++; if (run == k) { bouquets++; run = 0; } }
+    else          { run = 0; }
+
+    // ships: count trips
+    if (load + w > capacity) { day++; load = w; }
+    else                       load += w;
+
+### Bouquets vs ships — nearly the same, two differences
+
+|                   | bouquets                         | ships                                 |
+| ----------------- | -------------------------------- | ------------------------------------- |
+| counter starts at | 0                                | **1**                                 |
+| on reset          | `run = 0` — the flower is WASTED | `load = w` — the package CARRIES OVER |
+
+Ships starts at 1 because you're loading a ship from the very first
+package. No bouquet exists yet at the start, but a trip does.
+
+A flower at a gap goes nowhere. A package that didn't fit isn't thrown
+away — it's the first item on the next ship.
+
+---
+
+## Direction — always the same reasoning
+
+Ask: **if this value works, does the next one up also work?**
+
+    bigger divisor  → smaller sum     → still fits
+    faster speed    → fewer hours     → still in time
+    later day       → more bloomed    → still enough bouquets
+    bigger ship     → fewer trips     → still in time
+
+Yes every time. So the working values form ONE BLOCK and you want where
+it starts — lower bound shape:
+
+    works    → record mid, search LEFT  (high = mid - 1)
+    fails    → search RIGHT             (low  = mid + 1)
+
+---
+
+## Mistakes I made across these
+
+**Recorded the wrong thing.** `ans = val` instead of `ans = mid` in
+smallest divisor — that returns the SUM, not the divisor. Always record
+the thing you're searching for.
+(Same slip as returning the count instead of the element in
+highest-occurring-element.)
+
+**Comparison backwards.** In bouquets: `day <= d` should be `d <= day`,
+and `<= m` should be `>= m`.
+**Check by reading it aloud as a sentence** — "this plant blooms by the
+day I'm checking", "at least m bouquets". If the sentence doesn't match
+what you mean, it's the wrong way round.
+
+**Rounding up.** Integer division truncates, so 7/3 is already 2 before
+`Math.ceil` sees it — and ceil(2) is 2. Cast an operand FIRST:
+
+    (int) Math.ceil((double) nums[i] / divisor)
+
+Same rule as the overflow bugs: operand types decide how arithmetic
+happens, not what you do afterwards.
+
+**`min` starting at 0.** Values are positive so nothing is ever smaller
+and it never updates. Start at `Integer.MAX_VALUE`.
+
+**Overflow.** `(long) m * k` in bouquets — both can be large.
+(Seventh time.)
+
+**Helper taking too many parameters.** My ship helper took `days`. It
+shouldn't — its only job is capacity → days. The comparison against the
+limit belongs in the search.
+
+**Naming.** Called the divisor helper `divisor` when it returns a SUM.
+That's exactly the confusion that caused the `ans = val` bug. Name it
+`sumOfDivisions`. Names are cheap insurance against your own recurring
+mistakes.
+
+---
+
+## ans's starting value
+
+    divisor / Koko / ships : ans = high
+    bouquets               : ans = high (after the -1 impossible check)
+    lower bound            : ans = nums.length ("nothing found")
+
+When an answer is GUARANTEED to exist, start at the largest valid value —
+worst case, that's the answer. When it might not exist, the default has
+to mean "none".
+
+Bouquets needs the impossible check FIRST (`m*k > length` → -1); after
+that an answer is guaranteed.
