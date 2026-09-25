@@ -1,9 +1,9 @@
 ## REDO LIST
 
--M bouquet - 22nd sept
 -Ship capacity-23rd sept
 -Kth Missing Number-23rd Sept
 -Split Array Largest Sum -24th sept (Painter's Partition)
+-Aggressive cows-25th sept
 
 ## Time & Space Complexity
 
@@ -680,3 +680,247 @@ to mean "none".
 
 Bouquets needs the impossible check FIRST (`m*k > length` → -1); after
 that an answer is guaranteed.
+
+INDICES (searching the array):
+kth missing, lower/upper bound, rotated array, peak element
+low = 0, high = arr.length - 1
+
+ANSWER SPACE (no array being searched):
+Koko, ships, divisor, bouquets, split array
+low and high are possible ANSWERS — speeds, capacities, sums, days
+
+---
+
+# Binary Search — the five questions to ask every time
+
+## Q0: Am I searching INDICES or VALUES?
+
+**The test:** could the answer be a number that isn't in the array?
+
+    YES → answer space (values)
+    NO  → array indices
+
+**Or:** what does `mid` mean here — a place to LOOK, or a value to TRY?
+
+| Problem                            | mid is       | which   |
+| ---------------------------------- | ------------ | ------- |
+| search / lower bound / upper bound | a position   | indices |
+| find peak element                  | a position   | indices |
+| find min in rotated                | a position   | indices |
+| kth missing positive               | a position   | indices |
+| ships                              | a capacity   | values  |
+| Koko                               | a speed      | values  |
+| smallest divisor                   | a divisor    | values  |
+| bouquets                           | a day        | values  |
+| books / split array                | a page limit | values  |
+| aggressive cows                    | a distance   | values  |
+
+**Books:** [12,34,67,90] → answer 113. That's 12+34+67. It isn't in the
+array. Answer space.
+
+**Cows:** the answer might COINCIDENTALLY appear in the array (3 is a
+stall in [0,3,4,7,9,10]) but you're searching distances, not stalls.
+Still answer space. Note `high` is computed by SUBTRACTING two values —
+that's a span, not a location.
+
+**Indices** → `low = 0, high = length - 1`, always.
+**Values** → work out the range (Q2).
+
+---
+
+## Q1: What am I searching FOR?
+
+Name the thing the question asks you to return. Not the array, not the
+limit given to you — the number you hand back.
+
+    ships    → a capacity
+    Koko     → a speed
+    divisor  → a divisor
+    bouquets → a day
+    books    → a page limit
+    cows     → a distance
+
+**`mid` is a guess at that thing. `ans` holds the best guess. You return
+`ans`.**
+
+Getting this wrong caused a real bug: `ans = val` in smallest-divisor
+recorded the SUM instead of the divisor.
+
+---
+
+## Q2: What's the range?
+
+Two questions. Derive them — don't memorise the table.
+
+**What's the smallest value that isn't IMPOSSIBLE?**
+**What's the largest value that could still HELP?**
+
+| Problem  | low           | why                                                          | high          | why                                        |
+| -------- | ------------- | ------------------------------------------------------------ | ------------- | ------------------------------------------ |
+| ships    | max(weights)  | below it, the heaviest package NEVER fits                    | sum(weights)  | one trip; nothing bigger helps             |
+| books    | max(pages)    | the biggest book must go to SOMEONE, and they read that many | sum(pages)    | one student reads everything               |
+| Koko     | 1             | speed 1 is slow but VALID — she still eats                   | max(piles)    | each pile takes one hour, fastest possible |
+| divisor  | 1             | smallest meaningful divisor                                  | max(nums)     | every element rounds to 1                  |
+| bouquets | min(bloomDay) | before that, nothing has bloomed at all                      | max(bloomDay) | all bloomed; waiting changes nothing       |
+| cows     | 1             | smallest meaningful gap                                      | last - first  | the whole span                             |
+
+### The rule behind low
+
+**Is a tiny value IMPOSSIBLE, or just SLOW/BAD?**
+
+    IMPOSSIBLE → low is a max
+      books at limit 1: the 90-page book fits nowhere. No allocation exists.
+      ships at capacity 1: the heavy package can never be carried.
+
+    SLOW BUT VALID → low is 1
+      Koko at speed 1: she eats everything, just takes forever.
+      An answer exists; it might fail the time limit.
+
+### The rule behind high
+
+**Follow the MEANING of what you're measuring:**
+
+    a SPAN  → subtract   (cows: last - first)
+    a TOTAL → add        (books, ships: sum of everything)
+
+---
+
+## Q3: Do I want the answer BIG or SMALL?
+
+**Read the LAST word of the phrase:**
+
+    "minimise the MAXIMUM pages"         → answer should be SMALL
+    "MAXIMUM possible minimum distance"  → answer should be BIG
+
+**Or just say it out loud:** books — I want the biggest pile to be as
+small as possible → small. Cows — I want the closest pair as far apart
+as possible → big.
+
+**That decides ONE line:**
+
+    // want SMALL (ships, books, Koko, divisor, bouquets)
+    if (works) { ans = mid; high = mid - 1; }   // try smaller
+    else       { low = mid + 1; }
+
+    // want BIG (cows)
+    if (works) { ans = mid; low = mid + 1; }    // try bigger
+    else       { high = mid - 1; }
+
+**These two problems read almost identically and differ in one line.**
+Cows and books are the pair to watch.
+
+---
+
+## Q4: What does the helper do?
+
+**Give it a guess, get back a number to compare against the limit.**
+
+THE SHOP PICTURE: you point at a ship size, the shopkeeper tells you how
+many days. Then YOU decide if that's good enough. You can't walk in and
+say "give me the ship for 3 days" — nobody can answer that.
+
+    mid     = the thing you point at
+    helper  = the shopkeeper (guess in, number out)
+    compare = your job
+
+    guess a capacity → helper says days
+    guess a speed    → says hours
+    guess a limit    → says students
+    guess a distance → says cows placed
+    guess a day      → says bouquets
+
+**The helper never takes the limit as a parameter.** Its only job is
+guess → number. The comparison belongs in the search.
+
+### The helper shapes
+
+    // ships / books / split array — IDENTICAL code
+    if (running + item > limit) { count++; running = item; }
+    else                          running += item;
+    // count starts at 1, `>` not `>=` (hitting the limit exactly is fine)
+
+    // cows — greedy placement
+    if (nums[i] - last >= mid) { count++; last = nums[i]; }
+    // count starts at 1, loop starts at i=1, `>=` (bigger gaps are fine)
+
+    // bouquets
+    if (d <= day) { run++; if (run == k) { bouquets++; run = 0; } }
+    else            run = 0;
+    // bouquets starts at 0
+
+    // Koko / divisor — no reset, just a sum
+    total += (int) Math.ceil((double) item / guess);
+
+### Why some counters start at 1 and one starts at 0
+
+The first ship, first student, first cow all EXIST from the very first
+item. `count++` only fires when a new one STARTS, and nothing pushed the
+first one into being.
+
+A bouquet doesn't exist yet at the start — nothing is tied until k
+flowers are in hand. So 0.
+
+### Resets: discard vs carry over
+
+    bouquets: run = 0     the flower at a gap is WASTED
+    ships:    load = w    the package that didn't fit CARRIES OVER
+
+---
+
+## The three that are literally the same code
+
+    ships = split array largest sum = book allocation
+
+Different stories, rename the variables, identical. Book allocation is
+marked Hard; ships is Medium. **Recognising the disguise is most of the
+difficulty.**
+
+---
+
+## Recurring mistakes
+
+**Recorded the wrong thing** — `ans = val` (the sum) instead of
+`ans = mid` (the divisor). Always record the thing from Q1.
+
+**Comparison backwards** — `day <= d` should be `d <= day`; `<= m` should
+be `>= m`. **Read it aloud as a sentence.** "This plant blooms by the day
+I'm checking." If the sentence doesn't match your meaning, flip it.
+
+**Sorted when I shouldn't have** — books must stay in order (contiguous
+allocation). Cows MUST be sorted (distance needs a line). Ask whether
+order carries meaning.
+
+**Rounding up** — integer division truncates, so 7/3 is already 2 before
+`Math.ceil` sees it. Cast an operand FIRST:
+`(int) Math.ceil((double) x / y)`
+
+**`min` starting at 0** — values are positive so it never updates. Start
+at `Integer.MAX_VALUE`.
+
+**Overflow** — `(long) m * k`. Cast an OPERAND, not the result.
+
+**Naming** — called a helper `maxPages` when it returns a STUDENT count,
+and `divisor` when it returns a SUM. That's exactly what caused the
+`ans = val` bug. Name helpers for what they RETURN.
+
+---
+
+## ans's starting value
+
+    answer GUARANTEED to exist → ans = high (or low for maximise)
+                                 worst case, that IS the answer
+    might not exist            → default means "none" (e.g. nums.length, -1)
+
+Bouquets needs the impossible check FIRST (`m*k > length` → -1).
+Books needs `m > nums.length` → -1.
+After the impossible check, an answer is guaranteed.
+
+---
+
+## The one-page version
+
+    Q0. Indices or values?  → could the answer be outside the array?
+    Q1. Searching for what? → that's mid and ans
+    Q2. Smallest? Largest?  → that's low and high
+    Q3. Big or small?       → which pointer moves on success
+    Q4. Helper: guess → number, compared against the given limit
