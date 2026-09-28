@@ -1,9 +1,8 @@
 ## REDO LIST
 
--Ship capacity-23rd sept
--Kth Missing Number-23rd Sept
 -Split Array Largest Sum -24th sept (Painter's Partition)
 -Aggressive cows-25th sept
+-Median of two sorted arrays -28th sept
 
 ## Time & Space Complexity
 
