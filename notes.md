@@ -1,7 +1,7 @@
 ## REDO LIST
 
--Median of two sorted arrays -28th sept
 -Minimise the max dist -29th sept
+
 
 ## Time & Space Complexity
 
