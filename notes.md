@@ -1,7 +1,8 @@
 ## REDO LIST
 
 -Minimise the max dist -29th sept
--Find a Peak Element II
+-Find a Peak Element II -30th sept
+-Remove Outer Parentheses -06 oct
 
 ## Time & Space Complexity
 
@@ -922,3 +923,14 @@ After the impossible check, an answer is guaranteed.
     Q2. Smallest? Largest?  → that's low and high
     Q3. Big or small?       → which pointer moves on success
     Q4. Helper: guess → number, compared against the given limit
+
+---
+
+sorted array, find an element → indices
+answer not in the array → answer space
+→ minimise? works → go left
+→ maximise? works → go right
+matrix, flat order sorted → flatten, binary search
+matrix, rows/cols sorted but overlap → staircase
+matrix, only rows sorted → binary search on values
+not sorted at all, but uphill works → peak-style
