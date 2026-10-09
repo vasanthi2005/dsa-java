@@ -1,8 +1,6 @@
 ## REDO LIST
 
--Minimise the max dist -29th sept
--Find a Peak Element II -30th sept
--Remove Outer Parentheses -06 oct
+Count Number of Substrings -09 oct
 
 ## Time & Space Complexity
 
