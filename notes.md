@@ -1,6 +1,7 @@
 ## REDO LIST
 
 Count Number of Substrings -09 oct
+Beauty of all substrings -13th oct
 
 ## Time & Space Complexity
 
