@@ -2,9 +2,8 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-pow-29th oct
-paranthesis-29th oct
-subsets-30th oct
+Count Good Numbers-2nd Nov
+Reverse a Stack-2nd Nov
 
 ## Time & Space Complexity
 
