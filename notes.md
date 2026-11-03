@@ -2,8 +2,9 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-Count Good Numbers-2nd Nov
 Reverse a Stack-2nd Nov
+Check if there exists a subsequence with sum K-3rd Nov
+Count all subsequences with sum K-3rd Nov
 
 ## Time & Space Complexity
 
@@ -935,3 +936,41 @@ matrix, flat order sorted → flatten, binary search
 matrix, rows/cols sorted but overlap → staircase
 matrix, only rows sorted → binary search on values
 not sorted at all, but uphill works → peak-style
+
+## Recursion: COLLECTING vs DECIDING
+
+The question decides the shape before you write a line.
+
+**COLLECTING — void method, shared container**
+
+    static void build(List<List<Integer>> result, ...) {
+        result.add(new ArrayList<>(current));
+    }
+
+Nothing is handed back. Every branch dumps into a list the caller
+already holds. No return value needed.
+
+**DECIDING — returns a value, threaded up through every branch**
+
+    static boolean f(...) {
+        if (f(take)) return true;
+        return f(skip);
+    }
+
+No shared container. The only way the caller learns anything is
+through what you return. Miss a `return` and that branch's finding
+is lost.
+
+**Which one:**
+
+    "give me all the subsets"        → list    → void
+    "does one exist summing to k"    → yes/no  → boolean
+    "how many sum to k"              → number  → int
+    "largest sum <= k"               → number  → int
+
+Many answers → shared list, stay void.
+One answer → return it, and thread the returns through.
+
+collect → void, shared list
+decide → boolean, if(take) return true; return skip;
+count → int, return take + skip;
