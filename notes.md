@@ -2,9 +2,7 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-Reverse a Stack-2nd Nov
-Check if there exists a subsequence with sum K-3rd Nov
-Count all subsequences with sum K-3rd Nov
+Generate Binary strings-4th Nov
 
 ## Time & Space Complexity
 
