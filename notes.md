@@ -2,7 +2,8 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-Generate Binary strings-4th Nov
+Combinations II-5th Nov
+Letter Combinations-6th Nov
 
 ## Time & Space Complexity
 
