@@ -2,9 +2,9 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-Combinations II-5th Nov
 Letter Combinations-6th Nov
 Palindrome partitioning-9th Nov
+Word search-10th Nov
 
 ## Time & Space Complexity
 
