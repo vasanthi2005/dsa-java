@@ -2,9 +2,10 @@
 
 Count Number of Substrings -09 oct
 Beauty of all substrings -13th oct
-N-Queen's-12th Nov
-Rat in a Mace-13th Nov
-M Coloring problem-17th Nov
+Sudoku Solver-23rd Nov
+Expression Add Operators -24th Nov
+Rat in a Mace-26th Nov
+M Coloring problem-26th Nov
 
 ## Time & Space Complexity
 
